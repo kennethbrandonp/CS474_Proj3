@@ -6,7 +6,7 @@ import numpy as np
 def fft(data, nn, isign):
     n = nn
     data = np.array(data, dtype=complex) #For imaginary numbers
-
+    
     if isign == -1:  #Forward FFT
         if n > 1:
             evenPoints = fft(data[0::2], n // 2, isign) #Recursive split of data points for even
@@ -14,8 +14,8 @@ def fft(data, nn, isign):
 
             w = np.exp(-2j * np.pi * np.arange(n) / n) # e^(-2pij * k/N)
             half = n // 2   #Truncate decimals
-
-            return np.concatenate([evenPoints + w[:half] * oddPoints, evenPoints + w[half:] * oddPoints])
+            
+            return np.concatenate([evenPoints + w[:half] * oddPoints, evenPoints + w[half:] * oddPoints]) 
         else:
             return data
     
@@ -23,8 +23,7 @@ def fft(data, nn, isign):
         data = np.conj(data)        #Perform Complex conjugate 
         result = fft(data, nn, -1)  #Recall FFT
 
-        result = np.round(np.conj(result) / n, 10) #Normalize with N, round to 10 so we get our original data back in our real numbers
-
+        result.imag = np.round(result.imag, 10)
         return result
     
 def plotDFT(data, title, xlabel, ylabel, filename):
@@ -44,16 +43,17 @@ def partA():
     data = [2, 3, 4, 4]
     nn = len(data)
 
+    data = np.array(data) / nn     #Normalize
     forward = fft(data, nn, -1)    #For FFT
     magnitude = np.abs(forward)
-    #print("Data going in:", data)    
-    #print("Data after fft:", forward)
-    #print("Magnitude of the DFT:", magnitude)
+    print("Data going in:", data)    
+    print("Data after fft:", forward)
+    print("Magnitude of the DFT:", magnitude)
 
     #Plot DFT components REAL, IMAGINARY, and MAGNITUDE
-    plotDFT(forward.real, "FFT Real Component", "Index", "Real", "fftReal")
-    plotDFT(forward.imag, "FFT Imaginary Component", "Index", "Imaginary", "fftImaginary")
-    plotDFT(magnitude, "FFT Manitude", "Index", "Manitude", "fftManitude")
+    # plotDFT(forward.real, "FFT Real Component", "Index", "Real", "fftReal")
+    # plotDFT(forward.imag, "FFT Imaginary Component", "Index", "Imaginary", "fftImaginary")
+    # plotDFT(magnitude, "FFT Manitude", "Index", "Manitude", "fftManitude")
     inverse = fft(forward, nn, 1)    #For IFFT
     print("Data after ifft:", inverse)
 
@@ -66,12 +66,13 @@ def partB():
     #Verify that we have a cosine wave:
     plotDFT(cosWave, "Original Cosine Wave", "Samples(128)", "Amplitude", "originalCos")
 
+    cosWave = np.array(cosWave) / nn    #Normalize
     #Compute fft of cosine wave
     forward = fft(cosWave, nn, -1)
 
     #Verify that we get the same wave back:
     inverse = fft(forward, nn, 1)
-    plotDFT(inverse.real, "Inverse Cosine Wave", "Samples(128", "Amplitude", "inverseCos")
+    plotDFT(inverse.real, "Inverse Cosine Wave", "Samples(128)", "Amplitude", "inverseCos")
 
     #Shift the magnitude to center of frequency domain:
     forward = magShift(forward)
@@ -98,6 +99,7 @@ def partC():
     #Verify that we have the data from Rect_128:
     plotDFT(rect, "Original Rect_128.dat", "Samples(128)", "Value", "originalRectPlot")
 
+    rect = np.array(rect) / nn  #Normalize
     #Compute fft of Rect_128
     forward = fft(rect, nn, -1)
 
