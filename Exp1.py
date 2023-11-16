@@ -3,7 +3,7 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-def fft(data, nn, isign):
+def fft(data, nn, isign): #Cooley-Tukey modified
     n = nn
     data = np.array(data, dtype=complex) #For imaginary numbers
     
@@ -14,7 +14,7 @@ def fft(data, nn, isign):
 
             w = np.exp(-2j * np.pi * np.arange(n) / n) # e^(-2pij * k/N)
             half = n // 2   #Truncate decimals
-            
+
             return np.concatenate([evenPoints + w[:half] * oddPoints, evenPoints + w[half:] * oddPoints]) 
         else:
             return data
@@ -51,9 +51,9 @@ def partA():
     print("Magnitude of the DFT:", magnitude)
 
     #Plot DFT components REAL, IMAGINARY, and MAGNITUDE
-    # plotDFT(forward.real, "FFT Real Component", "Index", "Real", "fftReal")
-    # plotDFT(forward.imag, "FFT Imaginary Component", "Index", "Imaginary", "fftImaginary")
-    # plotDFT(magnitude, "FFT Manitude", "Index", "Manitude", "fftManitude")
+    plotDFT(forward.real, "FFT Real Component", "Index", "Real", "fftReal")
+    plotDFT(forward.imag, "FFT Imaginary Component", "Index", "Imaginary", "fftImaginary")
+    plotDFT(magnitude, "FFT Manitude", "Index", "Manitude", "fftManitude")
     inverse = fft(forward, nn, 1)    #For IFFT
     print("Data after ifft:", inverse)
 
