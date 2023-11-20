@@ -38,7 +38,7 @@ class PGM():
         for x in range(self.x):
             self.pixels.append([])
             for y in range(self.y):
-                self.pixels[x].append(float(file.readline().strip('\n')))
+                self.pixels[x].append(int(file.readline().strip('\n')))
 
         # Create histogram
         # self.pixels_flat = np.array(self.pixels).flatten().astype(np.int32)
