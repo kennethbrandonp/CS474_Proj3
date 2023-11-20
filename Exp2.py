@@ -1,6 +1,6 @@
 import math
 from Exp1 import np, fft
-from pgm import PGM
+from pgm_float import PGM
 
 def clamp(a, b, x):
     if x > b:
